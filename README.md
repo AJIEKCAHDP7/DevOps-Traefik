@@ -69,3 +69,16 @@ networks:
 
 // Запуск контейнера 
 >> docker compose -f nginx-compose.yml up
+
+
+
+// Для выноса конфигурацмм можно использовать traefik.yml файл
+api:
+ insecure: true
+log: 
+ level: DEBUG
+providers:
+ docker:
+  exposedByDefault: false
+  network: proxynet
+
