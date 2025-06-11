@@ -40,3 +40,23 @@ networks:
 >> docker compose up
 // Создание сети
 >> docker network create proxynet
+
+
+
+
+// Конфигурация Nginx - nginx-compose.yml
+
+version: '3'
+services:
+ nginx:
+  image: nginx:latest
+  container_name: nginx
+ lables: 
+  - "traefik.http.routes.nginx.rule=Host('nginx.demo.test.lv')"
+# Запуск в сети контейнера proxynet, где находится и наш Traefik
+networks:
+ default:
+  name: proxynet
+
+# указыкаем нужные парамметры, которые нам нужно передать для Traefik, чтобы Traefik знал к какому запросу
+перенаправлять наши request'ы на этот контейнер, для каждого контейнера нужно указывать по какому адресу URL запрос будет отправляться в nginx
