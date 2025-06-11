@@ -23,4 +23,5 @@ services:
       - "8080:8080"
     volumes:
       # So that Traefik can listen to the Docker events
+      # Делаем проброс сокет для докера, чтобы наш Traefik видел бы на этом сервере другие контейнеры
       - /var/run/docker.sock:/var/run/docker.sock
