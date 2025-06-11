@@ -56,7 +56,9 @@ services:
  nginx:
   image: nginx:latest
   container_name: nginx
-  lables: 
+  lables:
+   # контейнер указывает Traefik, что этот контейнер можно проксировать, используется в связке с --providers.docker.exposedByDefault=false
+   - "traefik.enable=true"
    - "traefik.http.routes.nginx.rule=Host('nginx.demo.test.lv')"
 # Запуск в сети контейнера proxynet, где находится и наш Traefik
 networks:
