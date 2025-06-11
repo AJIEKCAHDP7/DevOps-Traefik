@@ -15,7 +15,10 @@ services:
     # The official v3 Traefik docker image
     image: traefik:v3.4
     # Enables the web UI and tells Traefik to listen to docker
-    command: --api.insecure=true --providers.docker
+    command: 
+      - "--api.insecure=true" 
+      - "--providers.docker"
+      - "--log.level=DEBUG"
     ports:
       # The HTTP port
       - "80:80"
@@ -25,3 +28,7 @@ services:
       # So that Traefik can listen to the Docker events
       # Делаем проброс сокет для докера, чтобы наш Traefik видел бы на этом сервере другие контейнеры
       - /var/run/docker.sock:/var/run/docker.sock
+
+
+// Запуск контейнера
+>> docker compose up
