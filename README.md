@@ -14,12 +14,15 @@ services:
   reverse-proxy:
     # The official v3 Traefik docker image
     image: traefik:v3.4
+    container_name: traefik
     # Enables the web UI and tells Traefik to listen to docker
     command: 
       - "--api.insecure=true" 
       - "--providers.docker"
       # Уровень логов для откладки
       - "--log.level=DEBUG"
+      # Не публиковать Docker-контейнеры по умолчанию. То есть, контейнеры не будут автоматически доступны через Traefik, если явно не указать, что они должны быть "exposed". Это повышает безопасность, так как не все контейнеры автоматически становятся доступными извне.
+      - "--providers.docker.exposedByDefault=false"
     ports:
       # The HTTP port
       - "80:80"
