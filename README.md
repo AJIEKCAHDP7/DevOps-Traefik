@@ -15,25 +15,33 @@ services:
     # The official v3 Traefik docker image
     image: traefik:v3.4
     container_name: traefik
-    # Enables the web UI and tells Traefik to listen to docker
-    command: 
-      - "--api.insecure=true" 
-      - "--providers.docker"
+    # Enables the web UI and tells Traefik to listen to docker - парамметры вынесены в traefik.yml файл
+    # command: 
+      #- "--api.insecure=true" 
+      #- "--providers.docker"
       # Уровень логов для откладки
-      - "--log.level=DEBUG"
+      #- "--log.level=DEBUG"
       # Не публиковать Docker-контейнеры по умолчанию. То есть, контейнеры не будут автоматически доступны через Traefik, если явно не указать, что они должны быть "exposed". Это повышает безопасность, так как не все контейнеры автоматически становятся доступными извне.
-      - "--providers.docker.exposedByDefault=false"
+      #- "--providers.docker.exposedByDefault=false"
       # Заставляет Traefik использовать конкретную Docker-сеть (в этом случае — proxynet) при создании маршрутов к контейнерам.
-      - "--providers.docker.network=proxynet"
+      #- "--providers.docker.network=proxynet"
+      # Entrypoints:
+      #- "--entrypoints.http.address=:80"
+      #- "--entrypoints.https.address=:443"
+
     ports:
       # The HTTP port
       - "80:80"
+        # The HTTPS port
+      - "443:443"
       # The Web UI (enabled by --api.insecure=true)
       - "8080:8080"
     volumes:
       # So that Traefik can listen to the Docker events
       # Делаем проброс сокет для докера, чтобы наш Traefik видел бы на этом сервере другие контейнеры
       - /var/run/docker.sock:/var/run/docker.sock
+      # Только для чтения (read-only) — защита от случайной перезаписи
+      - ./traefik.yml:/traefik.yml:ro
 #Сеть которая будет управляться с помощью Traefik, те контейнеры которые будут помещаться в эту сеть, Traefik сможет перебрасывать на них запросы.
 networks:
  default:
