@@ -28,7 +28,11 @@ services:
       # Entrypoints:
       #- "--entrypoints.http.address=:80"
       #- "--entrypoints.https.address=:443"
-
+      # SSL Let's encrypt
+      #- "--entrypoints.https.http.tls.certResolver=le"
+      #- "--certificatesresolvers.le.acme.tlschallenge=true"
+      #- "--certificatesresolvers.le.acme.email=test@test.lv"
+      #- "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
     ports:
       # The HTTP port
       - "80:80"
@@ -87,7 +91,17 @@ entryPoints:
   address: ":80"
  https:
   address: ":443"
-  
+  http:
+    tls:
+     certResolver: le
+     
+certificatesResolvers:
+ le:
+  acme:
+   email: test@test.lv
+   storage: /letsencrypt/acme.json
+   tlsChallenge: true
+   
 api:
  insecure: true
 log: 
