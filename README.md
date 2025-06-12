@@ -28,6 +28,8 @@ services:
       # Entrypoints:
       #- "--entrypoints.http.address=:80"
       #- "--entrypoints.https.address=:443"
+      #- "--entrypoints.http.http.redirections.entrypoint.to=https"
+      #- "--entrypoints.http.http.redirections.entrypoint.scheme=https"
       # SSL Let's encrypt
       #- "--entrypoints.https.http.tls.certResolver=le"
       #- "--certificatesresolvers.le.acme.tlschallenge=true"
@@ -90,6 +92,11 @@ networks:
 entryPoints:
  http:
   address: ":80"
+  http:
+   redirections:
+    entryPoint:
+     to: https
+     scheme: https
  https:
   address: ":443"
   http:
