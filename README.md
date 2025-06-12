@@ -17,7 +17,7 @@ services:
     container_name: traefik
     # Enables the web UI and tells Traefik to listen to docker - парамметры вынесены в traefik.yml файл
     # command: 
-      #- "--api.insecure=true" 
+      #- "--api.insecure=false" 
       #- "--providers.docker"
       # Уровень логов для откладки
       #- "--log.level=DEBUG"
@@ -35,13 +35,19 @@ services:
       #- "--certificatesresolvers.le.acme.tlschallenge=true"
       #- "--certificatesresolvers.le.acme.email=test@test.lv"
       #- "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+     labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.test.lv`)"
+      - "traefik.http.routers.traefik.entrypoints=https"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=auth"
     ports:
       # The HTTP port
       - "80:80"
         # The HTTPS port
       - "443:443"
       # The Web UI (enabled by --api.insecure=true)
-      - "8080:8080"
+      #- "8080:8080"
     volumes:
       # So that Traefik can listen to the Docker events
       # Делаем проброс сокет для докера, чтобы наш Traefik видел бы на этом сервере другие контейнеры
@@ -74,7 +80,7 @@ services:
   lables:
    # контейнер указывает Traefik, что этот контейнер можно проксировать, используется в связке с --providers.docker.exposedByDefault=false
    - "traefik.enable=true"
-   - "traefik.http.routes.nginx.rule=Host('nginx.demo.test.lv')"
+   - "traefik.http.routes.nginx.rule=Host('nginx.test.lv')"
 # Запуск в сети контейнера proxynet, где находится и наш Traefik
 networks:
  default:
@@ -111,11 +117,21 @@ certificatesResolvers:
    tlsChallenge: true
    
 api:
- insecure: true
+ # Только https соединение
+ insecure: false
+ dashboard: true
 log: 
  level: DEBUG
 providers:
  docker:
   exposedByDefault: false
   network: proxynet
+middlewares:
+ auth:
+  basicAuth:
+   users:
+    - "admin:$apr1$9XW9ABCx$abcdefg..."  # Заменить на свой htpasswd-хеш
+
+#Комента для генирации htpasswd-хеш
+>> echo $(htpasswd -nb admin Parole123) | sed -e s/\\$/\\$\\$/g
 
