@@ -81,6 +81,13 @@ networks:
 
 
 // Для выноса конфигурацмм можно использовать traefik.yml файл
+# EntryPoints в Traefik — это входные точки, через которые трафик попадает в систему.
+entryPoints:
+ http:
+  address: ":80"
+ https:
+  address: ":443"
+  
 api:
  insecure: true
 log: 
