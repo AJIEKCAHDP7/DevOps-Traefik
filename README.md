@@ -46,6 +46,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       # Только для чтения (read-only) — защита от случайной перезаписи
       - ./traefik.yml:/traefik.yml:ro
+      - ./letsencrypt:/letsencrypt
 #Сеть которая будет управляться с помощью Traefik, те контейнеры которые будут помещаться в эту сеть, Traefik сможет перебрасывать на них запросы.
 networks:
  default:
