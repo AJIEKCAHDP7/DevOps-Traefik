@@ -92,6 +92,23 @@ networks:
 >> docker compose -f nginx-compose.yml up
 
 
+// Конфигурация Apache - apache-compose.yml
+
+version: '3'
+services:
+ apache:
+  image: httpd:latest
+  container_name: apache
+  lables:
+   # контейнер указывает Traefik, что этот контейнер можно проксировать, используется в связке с --providers.docker.exposedByDefault=false
+   - "traefik.enable=true"
+   - "traefik.http.routes.apache.rule=Host('apache.test.lv')"
+# Запуск в сети контейнера proxynet, где находится и наш Traefik
+networks:
+ default:
+  name: proxynet
+
+
 
 // Для выноса конфигурацмм можно использовать traefik.yml файл
 # EntryPoints в Traefik — это входные точки, через которые трафик попадает в систему.
